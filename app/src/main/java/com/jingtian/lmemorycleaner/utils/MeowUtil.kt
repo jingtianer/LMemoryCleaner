@@ -145,5 +145,10 @@ object MeowUtil {
         return BitmapFactory.decodeResource(app.resources, this)
     }
 
+    fun dp2px(dipValue: Float): Int {
+        val scale = app.resources.displayMetrics.density
+        return (dipValue * scale + 0.5f).toInt()
+    }
+
 
 }

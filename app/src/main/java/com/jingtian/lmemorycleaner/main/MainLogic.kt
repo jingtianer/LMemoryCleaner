@@ -1,15 +1,17 @@
 package com.jingtian.lmemorycleaner.main
 
-import android.app.ActivityManager
 import android.content.Context
-import android.content.pm.ApplicationInfo
+import android.graphics.Color
 import androidx.core.graphics.drawable.toDrawable
 import com.jingtian.lmemorycleaner.R
 import com.jingtian.lmemorycleaner.bean.MainFunctionsBean
 import com.jingtian.lmemorycleaner.boost.BoostActivity
-import com.jingtian.lmemorycleaner.utils.*
+import com.jingtian.lmemorycleaner.boost.BoostDrawable
+import com.jingtian.lmemorycleaner.utils.MeowUtil
 import com.jingtian.lmemorycleaner.utils.MeowUtil.asBitMap
 import com.jingtian.lmemorycleaner.utils.MeowUtil.startActivity
+import com.jingtian.lmemorycleaner.utils.app
+import com.jingtian.lmemorycleaner.utils.toast
 
 class MainLogic(private val context: Context) : MainContract.Presenter {
     var view: MainContract.View? = null
@@ -40,7 +42,9 @@ class MainLogic(private val context: Context) : MainContract.Presenter {
             ),
             MainFunctionsBean(
                 "加速",
-                R.mipmap.main_phone_boost.asBitMap().toDrawable(app.resources),
+                BoostDrawable(Color.GREEN).apply {
+                    update(MeowUtil.getMemoryPercentage())
+                },
                 R.mipmap.main_phone_boost
             )
         )

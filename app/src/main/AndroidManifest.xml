@@ -29,7 +29,7 @@
         <activity android:name=".boost.BoostActivity"/>
         <receiver android:name=".boost.BoostWidget"
             android:exported="true">
-            <intent-filter>
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.jingtian.lmemorycleaner.ACTION_BOOST"/>
             </intent-filter>
             <meta-data

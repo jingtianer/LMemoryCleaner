@@ -7,20 +7,23 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.widget.RemoteViews
 import androidx.core.graphics.drawable.toBitmap
 import com.jingtian.lmemorycleaner.R
+import com.jingtian.lmemorycleaner.utils.MeowUtil.asBitMap
 import com.jingtian.lmemorycleaner.utils.MeowUtil.getMemoryPercentage
+import com.jingtian.lmemorycleaner.utils.MeowUtil.logD
 import com.jingtian.lmemorycleaner.utils.toast
+import java.util.*
 
 class BoostWidget : AppWidgetProvider() {
     companion object {
         const val ACTION_BOOST = "com.jingtian.lmemorycleaner.ACTION_BOOST"
     }
 
-    private val boostDrawable = BoostDrawable(100)
+    private val boostDrawable = BoostDrawable(Color.RED,100)
     private fun percentage() = getMemoryPercentage()
-
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action
         val awm = AppWidgetManager.getInstance(context)
@@ -41,10 +44,19 @@ class BoostWidget : AppWidgetProvider() {
         appWidgetIds: IntArray?
     ) {
         boostDrawable.update(percentage())
+        logD{
+            "update!"
+        }
+        val remoteViews = RemoteViews(context?.packageName, R.layout.widget_boost)
 
+        context?.let { c->
+            val awm = AppWidgetManager.getInstance(c)
+            val componentName = ComponentName(c,BoostWidget::class.java)
+            remoteViews.setImageViewBitmap(R.id.boost_ball, boostDrawable.toBitmap())
+            awm.updateAppWidget(awm.getAppWidgetIds(componentName), remoteViews)
+        }
         appWidgetIds?.let { it ->
             for (id in it) {
-                val remoteViews = RemoteViews(context?.packageName, R.layout.widget_boost)
                 val intent = Intent(ACTION_BOOST)
                 intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
                 val pendingIntent = PendingIntent.getBroadcast(
@@ -55,12 +67,7 @@ class BoostWidget : AppWidgetProvider() {
                 )
                 remoteViews.setOnClickPendingIntent(R.id.boost_ball, pendingIntent)
 
-                context?.let { c->
-                    val awm = AppWidgetManager.getInstance(c)
-                    val componentName = ComponentName(c,BoostWidget::class.java)
-                    remoteViews.setImageViewBitmap(R.id.boost_ball, boostDrawable.toBitmap())
-                    awm.updateAppWidget(awm.getAppWidgetIds(componentName), remoteViews)
-                }
+
             }
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds)
