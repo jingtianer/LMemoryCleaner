@@ -11,7 +11,10 @@ import com.jingtian.lmemorycleaner.utils.MeowUtil
 import com.jingtian.lmemorycleaner.utils.MeowUtil.asBitMap
 import com.jingtian.lmemorycleaner.utils.MeowUtil.startActivity
 import com.jingtian.lmemorycleaner.utils.app
+import com.jingtian.lmemorycleaner.utils.newMainCoroutineJob
 import com.jingtian.lmemorycleaner.utils.toast
+import kotlinx.coroutines.delay
+import java.util.*
 
 class MainLogic(private val context: Context) : MainContract.Presenter {
     var view: MainContract.View? = null
@@ -23,6 +26,11 @@ class MainLogic(private val context: Context) : MainContract.Presenter {
         view = null
     }
 
+    private val boostDrawable by lazy {
+        BoostDrawable(Color.parseColor("#99ff66"), Color.parseColor("#00cc00"),Color.parseColor("#dedede")).apply {
+            update(MeowUtil.getMemoryPercentage())
+        }
+    }
     override fun getFunctionBean(): List<MainFunctionsBean> {
         return listOf(
             MainFunctionsBean(
@@ -42,14 +50,25 @@ class MainLogic(private val context: Context) : MainContract.Presenter {
             ),
             MainFunctionsBean(
                 "加速",
-                BoostDrawable(Color.GREEN).apply {
-                    update(MeowUtil.getMemoryPercentage())
-                },
+                boostDrawable,
                 R.mipmap.main_phone_boost
             )
         )
     }
+    var running = true
+    override fun onResume() {
+        boostDrawable.update(MeowUtil.getMemoryPercentage())
+        newMainCoroutineJob {
+            while (running){
+                delay(40)
+                boostDrawable.fluctuate()
+            }
+        }
+    }
 
+    override fun onDestroy() {
+        running = false
+    }
     override fun startFunction(id: Int) {
         when (id) {
             R.mipmap.main_app_clean -> {
@@ -63,7 +82,6 @@ class MainLogic(private val context: Context) : MainContract.Presenter {
             }
             R.mipmap.main_phone_boost -> {
                 context.startActivity(BoostActivity::class.java)
-
             }
         }
     }

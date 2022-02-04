@@ -14,6 +14,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         MainLogic(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        logic.onResume()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
+        logic.onDestroy()
         logic.unBind()
     }
     override fun bind() {

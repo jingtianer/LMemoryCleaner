@@ -11,6 +11,8 @@ interface MainContract {
         fun bind(v:View)
         fun unBind()
 
+        fun onResume()
+        fun onDestroy()
         fun getFunctionBean():List<MainFunctionsBean>
         fun startFunction(id:Int)
     }
