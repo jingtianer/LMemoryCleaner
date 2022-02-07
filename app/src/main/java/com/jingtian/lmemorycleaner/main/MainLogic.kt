@@ -27,7 +27,10 @@ class MainLogic(private val context: Context) : MainContract.Presenter {
     }
 
     private val boostDrawable by lazy {
-        BoostDrawable(Color.parseColor("#99ff66"), Color.parseColor("#00cc00"),Color.parseColor("#dedede")).apply {
+        BoostDrawable(
+            Color.parseColor("#0CDE74"),
+            Color.parseColor("#36E88E"),
+            Color.parseColor("#ABF8D1")).apply {
             update(MeowUtil.getMemoryPercentage())
         }
     }
@@ -55,13 +58,21 @@ class MainLogic(private val context: Context) : MainContract.Presenter {
             )
         )
     }
-    var running = true
+    var running = false
     override fun onResume() {
-        boostDrawable.update(MeowUtil.getMemoryPercentage())
-        newMainCoroutineJob {
-            while (running){
-                delay(40)
-                boostDrawable.fluctuate()
+        if (!running) {
+            running = true
+            newMainCoroutineJob {
+                while (running) {
+                    for (i in 0 until boostDrawable.fluctuatePrecision) {
+                        delay(100)
+                        boostDrawable.update(
+                            MeowUtil.getMemoryPercentage(),
+                            boostDrawable.fluctuatePrecision - i
+                        )
+                    }
+                    boostDrawable.fluctuate()
+                }
             }
         }
     }

@@ -1,9 +1,12 @@
 package com.jingtian.lmemorycleaner.main
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import com.jingtian.lmemorycleaner.boost.BoostService
 import com.jingtian.lmemorycleaner.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), MainContract.View {
@@ -22,6 +25,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind()
+
+
         setContentView(binding.root)
         binding.rvFunctions.apply {
             layoutManager = GridLayoutManager(this@MainActivity, 2).apply {

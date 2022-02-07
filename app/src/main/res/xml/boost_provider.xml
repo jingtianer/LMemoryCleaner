@@ -3,9 +3,9 @@
     android:description="@string/app_name"
     android:initialKeyguardLayout="@layout/widget_boost"
     android:initialLayout="@layout/widget_boost"
-    android:minWidth="150dp"
-    android:minHeight="150dp"
+    android:minWidth="60dp"
+    android:minHeight="60dp"
     android:previewImage="@mipmap/ic_launcher"
     android:resizeMode="none"
-    android:updatePeriodMillis="40"
+    android:updatePeriodMillis="1000"
     android:widgetCategory="home_screen" />
